@@ -134,61 +134,44 @@ function PainSelector({ value, onChange }) {
   );
 }
 
-function PastEntry({ entry }) {
-  const [, m, d] = entry.date.split('-').map(Number);
-  const date = new Date(Number(entry.date.split('-')[0]), m - 1, d);
-  const label = date.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
-
-  const fields = [
-    { label: 'Weight', value: entry.weight, unit: 'lbs' },
-    { label: 'Temp', value: entry.temp, unit: '°F' },
-    { label: 'BP', value: entry.bp, unit: '' },
-    { label: 'Pulse', value: entry.pulse, unit: 'bpm' },
-    { label: 'Resp', value: entry.resp, unit: '/min' },
-    { label: 'Pain', value: entry.pain, unit: '/10' },
-    { label: 'Fluids', value: entry.fluids, unit: 'mL' },
-  ];
+function VitalsTable({ entries }) {
+  if (entries.length === 0) return null;
 
   return (
-    <div
-      style={{
-        backgroundColor: '#FFFFFF',
-        border: '1.5px solid #E5E7EB',
-        borderRadius: '14px',
-        padding: '14px 16px',
-        marginBottom: '10px',
-      }}
-    >
-      <div
-        style={{
-          fontSize: '16px',
-          fontWeight: '800',
-          color: '#1A3A5C',
-          marginBottom: '10px',
-          paddingBottom: '8px',
-          borderBottom: '1.5px solid #F3F4F6',
-        }}
-      >
-        {label}
-      </div>
-      <div
-        style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(4, 1fr)',
-          gap: '8px',
-        }}
-      >
-        {fields.map((f) => (
-          <div key={f.label}>
-            <div style={{ fontSize: '11px', fontWeight: '700', color: '#9CA3AF', textTransform: 'uppercase' }}>
-              {f.label}
-            </div>
-            <div style={{ fontSize: '17px', fontWeight: '800', color: f.value ? '#1A3A5C' : '#D1D5DB' }}>
-              {f.value ? `${f.value}${f.unit}` : '—'}
-            </div>
-          </div>
-        ))}
-      </div>
+    <div style={{ overflowX: 'auto', backgroundColor: '#FFFFFF', borderRadius: '14px', border: '1.5px solid #E5E7EB' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#F3F4F6', color: '#374151', textTransform: 'uppercase', fontSize: '12px' }}>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Date</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Weight</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Temp</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>BP</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Pulse</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Resp</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Pain</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Fluids</th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((entry, idx) => {
+            const [, m, d] = entry.date.split('-').map(Number);
+            const date = new Date(Number(entry.date.split('-')[0]), m - 1, d);
+            const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            return (
+              <tr key={entry.date} style={{ borderBottom: idx === entries.length - 1 ? 'none' : '1px solid #E5E7EB' }}>
+                <td style={{ padding: '12px', fontWeight: '700', color: '#1A3A5C', whiteSpace: 'nowrap' }}>{label}</td>
+                <td style={{ padding: '12px', color: entry.weight ? '#1A3A5C' : '#D1D5DB' }}>{entry.weight || '—'}</td>
+                <td style={{ padding: '12px', color: entry.temp ? '#1A3A5C' : '#D1D5DB' }}>{entry.temp || '—'}</td>
+                <td style={{ padding: '12px', color: entry.bp ? '#1A3A5C' : '#D1D5DB' }}>{entry.bp || '—'}</td>
+                <td style={{ padding: '12px', color: entry.pulse ? '#1A3A5C' : '#D1D5DB' }}>{entry.pulse || '—'}</td>
+                <td style={{ padding: '12px', color: entry.resp ? '#1A3A5C' : '#D1D5DB' }}>{entry.resp || '—'}</td>
+                <td style={{ padding: '12px', color: entry.pain ? '#1A3A5C' : '#D1D5DB' }}>{entry.pain || '—'}</td>
+                <td style={{ padding: '12px', color: entry.fluids ? '#1A3A5C' : '#D1D5DB' }}>{entry.fluids || '—'}</td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
     </div>
   );
 }
@@ -407,8 +390,8 @@ export default function VitalsLog() {
         </button>
       </div>
 
-      {/* Past entries */}
-      {pastEntries.length > 0 && (
+      {/* All entries table */}
+      {vitalsLog.length > 0 ? (
         <div>
           <div
             style={{
@@ -420,15 +403,11 @@ export default function VitalsLog() {
               letterSpacing: '0.5px',
             }}
           >
-            Previous Entries
+            All Entries Spreadsheet
           </div>
-          {pastEntries.map((entry) => (
-            <PastEntry key={entry.date} entry={entry} />
-          ))}
+          <VitalsTable entries={vitalsLog.sort((a, b) => (a.date > b.date ? -1 : 1))} />
         </div>
-      )}
-
-      {pastEntries.length === 0 && (
+      ) : (
         <div
           style={{
             textAlign: 'center',
@@ -440,7 +419,7 @@ export default function VitalsLog() {
         >
           No previous entries yet.
           <br />
-          Past days will appear here.
+          Added vitals will appear here in a spreadsheet.
         </div>
       )}
     </div>

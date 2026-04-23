@@ -194,6 +194,10 @@ function TimeBlock({ block, meds, checks, onToggle }) {
 export default function TodaysMeds() {
   const today = getTodayKey();
   const [checks, setChecks] = useLocalStorage(`meds_${today}`, {});
+  const [vitalsLog] = useLocalStorage('vitals_log', []);
+
+  const todayVitals = vitalsLog.find((e) => e.date === today);
+  const currentFluids = todayVitals && todayVitals.fluids ? Number(todayVitals.fluids) : 0;
 
   const allMeds = Object.values(MEDICATIONS).flat();
   const totalTaken = allMeds.filter((m) => checks[m.id]).length;
@@ -275,12 +279,21 @@ export default function TodaysMeds() {
         }}
       >
         <span style={{ fontSize: '26px', flexShrink: 0 }}>💧</span>
-        <div>
+        <div style={{ width: '100%' }}>
           <div style={{ fontSize: '18px', fontWeight: '900', color: '#92400E' }}>
             FLUID RESTRICTION: 1,500 mL / day
           </div>
           <div style={{ fontSize: '15px', color: '#78350F', fontWeight: '600', marginTop: '3px' }}>
             Count water used to swallow pills toward your daily limit!
+          </div>
+          <div style={{ marginTop: '10px', backgroundColor: '#FDE68A', borderRadius: '8px', padding: '8px 12px' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '15px', fontWeight: '800', color: '#92400E' }}>
+              <span>Current Fluids: {currentFluids} mL</span>
+              <span>{1500 - currentFluids > 0 ? `${1500 - currentFluids} mL left` : 'Limit reached!'}</span>
+            </div>
+            <div style={{ height: '8px', backgroundColor: '#FEF3C7', borderRadius: '4px', marginTop: '6px', overflow: 'hidden' }}>
+              <div style={{ height: '100%', width: `${Math.min((currentFluids / 1500) * 100, 100)}%`, backgroundColor: currentFluids > 1500 ? '#EF4444' : '#F59E0B', borderRadius: '4px' }} />
+            </div>
           </div>
         </div>
       </div>

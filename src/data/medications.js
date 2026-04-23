@@ -1,8 +1,8 @@
-// Medication schedule — sourced from discharge instructions PDF (Sayed M. Pervez)
+// Medication schedule — sourced from discharge instructions PDF
 // To update: edit this file and redeploy to Netlify.
 
 export const MEDICATIONS = {
-  morning: [
+  '08:00 AM': [
     {
       id: 'asp-81',
       name: 'Aspirin',
@@ -68,7 +68,7 @@ export const MEDICATIONS = {
       instructions: 'Can be taken with or without food.',
     },
   ],
-  evening: [
+  '08:00 PM': [
     {
       id: 'meto-25',
       name: 'Metoprolol Succinate ER',
@@ -94,7 +94,7 @@ export const MEDICATIONS = {
       instructions: 'Can be taken with or without food.',
     },
   ],
-  bedtime: [
+  '10:00 PM': [
     {
       id: 'ator-40',
       name: 'Atorvastatin',
@@ -153,8 +153,8 @@ export const MEDICATIONS = {
 };
 
 export const TIME_BLOCKS = [
-  { key: 'morning', label: 'Morning', emoji: '☀️', color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' },
-  { key: 'evening', label: 'Evening', emoji: '🌆', color: '#EA580C', bg: '#FFF7ED', border: '#FED7AA' },
-  { key: 'bedtime', label: 'Bedtime', emoji: '🌙', color: '#4F46E5', bg: '#EEF2FF', border: '#C7D2FE' },
+  { key: '08:00 AM', label: '08:00 AM', emoji: '☀️', color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' },
+  { key: '08:00 PM', label: '08:00 PM', emoji: '🌆', color: '#EA580C', bg: '#FFF7ED', border: '#FED7AA' },
+  { key: '10:00 PM', label: '10:00 PM', emoji: '🌙', color: '#4F46E5', bg: '#EEF2FF', border: '#C7D2FE' },
   { key: 'prn',     label: 'As Needed (PRN)', emoji: '⚠️', color: '#DC2626', bg: '#FEF2F2', border: '#FECACA' },
 ];
