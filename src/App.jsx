@@ -207,10 +207,6 @@ export default function App() {
           );
         })}
       </nav>
-        {activeTab === 'meds' && <TodaysMeds />}
-        {activeTab === 'vitals' && <VitalsLog />}
-        {activeTab === 'library' && <MedicineLibrary />}
-      </main>
     </div>
   );
 }
