@@ -221,10 +221,12 @@ function TimeBlock({ block, meds, checks, onToggle }) {
 export default function TodaysMeds() {
   const today = getTodayKey();
   const [checks, setChecks] = useLocalStorage(`meds_${today}`, {});
-  const [vitalsLog] = useLocalStorage('vitals_log', []);
+  const [fluidsLog] = useLocalStorage('fluids_log', []);
 
-  const todayVitals = vitalsLog.find((e) => e.date === today);
-  const currentFluids = todayVitals && todayVitals.fluids ? Number(todayVitals.fluids) : 0;
+  // Calculate current fluids from separate fluids_log
+  const currentFluids = fluidsLog
+    .filter(e => e.date === today)
+    .reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
   const allMeds = Object.values(MEDICATIONS).flat();
   const totalTaken = allMeds.filter((m) => checks[m.id]).length;

@@ -9,7 +9,6 @@ const EMPTY_VITALS = {
   pulse: '',
   resp: '',
   pain: '',
-  fluids: '',
 };
 
 function InputField({ label, value, onChange, placeholder, inputMode, hint, isNumeric }) {
@@ -129,7 +128,7 @@ function VitalsTable({ entries }) {
       <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
         <thead>
           <tr style={{ backgroundColor: '#F3F4F6', color: '#374151', textTransform: 'uppercase', fontSize: '12px' }}>
-            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Date</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Date & Time</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Weight</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Temp</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>BP Top</th>
@@ -142,12 +141,12 @@ function VitalsTable({ entries }) {
         </thead>
         <tbody>
           {entries.map((entry, idx) => {
-            const [, m, d] = entry.date.split('-').map(Number);
-            const date = new Date(Number(entry.date.split('-')[0]), m - 1, d);
-            const label = date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const label = entry.date.split('-').slice(1).join('/');
             return (
-              <tr key={entry.date} style={{ borderBottom: idx === entries.length - 1 ? 'none' : '1px solid #E5E7EB' }}>
-                <td style={{ padding: '12px', fontWeight: '700', color: '#1A3A5C', whiteSpace: 'nowrap' }}>{label}</td>
+              <tr key={entry.id || entry.date} style={{ borderBottom: idx === entries.length - 1 ? 'none' : '1px solid #E5E7EB' }}>
+                <td style={{ padding: '12px', fontWeight: '700', color: '#1A3A5C', whiteSpace: 'nowrap' }}>
+                  {entry.timestamp || label}
+                </td>
                 <td style={{ padding: '12px', color: entry.weight ? '#1A3A5C' : '#D1D5DB' }}>{entry.weight || '—'}</td>
                 <td style={{ padding: '12px', color: entry.temp ? '#1A3A5C' : '#D1D5DB' }}>{entry.temp || '—'}</td>
                 <td style={{ padding: '12px', color: (entry.bpTop || (entry.bp && entry.bp.split('/')[0])) ? '#1A3A5C' : '#D1D5DB' }}>
@@ -169,30 +168,75 @@ function VitalsTable({ entries }) {
   );
 }
 
+function FluidsTable({ entries }) {
+  if (entries.length === 0) return null;
+
+  return (
+    <div style={{ overflowX: 'auto', backgroundColor: '#FFFFFF', borderRadius: '14px', border: '1.5px solid #E5E7EB', marginTop: '16px' }}>
+      <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '14px' }}>
+        <thead>
+          <tr style={{ backgroundColor: '#FEF3C7', color: '#92400E', textTransform: 'uppercase', fontSize: '12px' }}>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Date & Time</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          {entries.map((entry, idx) => (
+            <tr key={entry.id || idx} style={{ borderBottom: idx === entries.length - 1 ? 'none' : '1px solid #E5E7EB' }}>
+              <td style={{ padding: '12px', fontWeight: '700', color: '#92400E', whiteSpace: 'nowrap' }}>
+                {entry.timestamp || entry.date}
+              </td>
+              <td style={{ padding: '12px', color: '#B45309', fontWeight: '800' }}>+{entry.amount} mL</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
 export default function VitalsLog() {
   const today = getTodayKey();
   const [vitalsLog, setVitalsLog] = useLocalStorage('vitals_log', []);
+  const [fluidsLog, setFluidsLog] = useLocalStorage('fluids_log', []);
   const [saved, setSaved] = useState(false);
-  // Form state is decoupled from stored state — always starts empty so fields clear after save
   const [form, setForm] = useState({ ...EMPTY_VITALS });
+  const [fluidsInput, setFluidsInput] = useState('');
+  const [fluidsSaved, setFluidsSaved] = useState(false);
+
+  function getCSTTimestamp() {
+    return new Date().toLocaleString('en-US', { timeZone: 'America/Chicago', month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit', hour12: true });
+  }
 
   function updateField(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
   }
 
   function handleSave() {
-    // Merge form into today's stored entry
-    const existing = vitalsLog.find((e) => e.date === today) || { date: today, ...EMPTY_VITALS };
-    const updated = { ...existing, ...form, date: today };
-    setVitalsLog((prev) => {
-      const others = prev.filter((e) => e.date !== today);
-      return [updated, ...others];
-    });
+    const hasData = Object.values(form).some((v) => v !== '');
+    if (!hasData) return;
+    const timestamp = getCSTTimestamp();
+    const newEntry = { ...form, id: Date.now(), date: today, timestamp };
+    setVitalsLog((prev) => [newEntry, ...prev]);
     setSaved(true);
-    setForm({ ...EMPTY_VITALS }); // Clear form fields after save
+    setForm({ ...EMPTY_VITALS });
     if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
     setTimeout(() => setSaved(false), 2500);
   }
+
+  function handleSaveFluids() {
+    if (!fluidsInput || Number(fluidsInput) <= 0) return;
+    const timestamp = getCSTTimestamp();
+    const newEntry = { id: Date.now(), date: today, amount: fluidsInput, timestamp };
+    setFluidsLog((prev) => [newEntry, ...prev]);
+    setFluidsSaved(true);
+    setFluidsInput('');
+    if (navigator.vibrate) navigator.vibrate(30);
+    setTimeout(() => setFluidsSaved(false), 2000);
+  }
+
+  const todayFluids = fluidsLog.filter(e => e.date === today);
+  const currentFluids = todayFluids.reduce((sum, e) => sum + Number(e.amount || 0), 0);
 
   return (
     <div style={{ paddingBottom: '8px' }}>
@@ -216,22 +260,49 @@ export default function VitalsLog() {
         </div>
       </div>
 
-      {/* Fluid restriction reminder */}
+      {/* Fluid restriction reminder & Input */}
       <div
         style={{
           backgroundColor: '#FEF3C7',
           border: '2px solid #FCD34D',
           borderRadius: '14px',
-          padding: '12px 16px',
+          padding: '16px',
           marginBottom: '20px',
-          display: 'flex',
-          gap: '10px',
-          alignItems: 'center',
         }}
       >
-        <span style={{ fontSize: '22px' }}>💧</span>
-        <div style={{ fontSize: '16px', fontWeight: '800', color: '#92400E' }}>
-          Daily fluid limit: 1,500 mL (≈ 50 oz)
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center', marginBottom: '16px' }}>
+          <span style={{ fontSize: '22px' }}>💧</span>
+          <div style={{ fontSize: '16px', fontWeight: '800', color: '#92400E' }}>
+            Daily fluid limit: 1,500 mL (≈ 50 oz)
+          </div>
+        </div>
+
+        <div style={{ marginBottom: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '14px', fontWeight: '700', color: currentFluids > 1500 ? '#DC2626' : currentFluids > 1200 ? '#D97706' : '#16A34A', marginBottom: '5px' }}>
+            <span>{currentFluids > 1500 ? '⚠️ OVER LIMIT' : `${Math.max(0, 1500 - currentFluids)} mL remaining`}</span>
+            <span>{Math.round((currentFluids / 1500) * 100)}% of limit</span>
+          </div>
+          <div style={{ height: '10px', backgroundColor: '#FDE68A', borderRadius: '8px', overflow: 'hidden' }}>
+            <div style={{ height: '100%', width: `${Math.min((currentFluids / 1500) * 100, 100)}%`, backgroundColor: currentFluids > 1500 ? '#DC2626' : currentFluids > 1200 ? '#D97706' : '#16A34A', borderRadius: '8px', transition: 'width 0.3s ease' }} />
+          </div>
+        </div>
+
+        <div style={{ display: 'flex', gap: '8px' }}>
+          <input
+            type="number"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            value={fluidsInput}
+            onChange={(e) => setFluidsInput(e.target.value)}
+            placeholder="e.g. 200"
+            style={{ flex: 1, padding: '12px 14px', fontSize: '18px', fontWeight: '700', borderRadius: '10px', border: '1px solid #F59E0B', outline: 'none' }}
+          />
+          <button
+            onClick={handleSaveFluids}
+            style={{ padding: '0 20px', backgroundColor: fluidsSaved ? '#10B981' : '#F59E0B', color: '#FFF', fontWeight: '800', fontSize: '16px', border: 'none', borderRadius: '10px', transition: 'background-color 0.2s', WebkitTapHighlightColor: 'transparent', cursor: 'pointer' }}
+          >
+            {fluidsSaved ? '✓ Saved' : 'Log mL'}
+          </button>
         </div>
       </div>
 
@@ -323,68 +394,6 @@ export default function VitalsLog() {
 
         <PainSelector value={form.pain} onChange={(v) => updateField('pain', v)} />
 
-        {/* Fluids with 1500mL progress */}
-        <InputField
-          label="Fluid Intake"
-          hint="(mL — daily limit: 1,500)"
-          value={form.fluids}
-          onChange={(v) => updateField('fluids', v)}
-          placeholder="e.g. 800"
-          inputMode="numeric"
-          isNumeric
-        />
-        {form.fluids && Number(form.fluids) > 0 && (
-          <div style={{ marginTop: '-10px', marginBottom: '16px' }}>
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                fontSize: '14px',
-                fontWeight: '700',
-                color:
-                  Number(todayEntry.fluids) > 1500
-                    ? '#DC2626'
-                    : Number(todayEntry.fluids) > 1200
-                    ? '#D97706'
-                    : '#16A34A',
-                marginBottom: '5px',
-              }}
-            >
-              <span>
-                {Number(form.fluids) > 1500
-                  ? '⚠️ OVER LIMIT'
-                  : `${1500 - Number(form.fluids)} mL remaining`}
-              </span>
-              <span>
-                {Math.round((Number(form.fluids) / 1500) * 100)}% of limit
-              </span>
-            </div>
-            <div
-              style={{
-                height: '10px',
-                backgroundColor: '#F3F4F6',
-                borderRadius: '8px',
-                overflow: 'hidden',
-              }}
-            >
-              <div
-                style={{
-                  height: '100%',
-                  width: `${Math.min((Number(form.fluids) / 1500) * 100, 100)}%`,
-                  backgroundColor:
-                    Number(form.fluids) > 1500
-                      ? '#DC2626'
-                      : Number(form.fluids) > 1200
-                      ? '#D97706'
-                      : '#526442',
-                  borderRadius: '8px',
-                  transition: 'width 0.3s ease',
-                }}
-              />
-            </div>
-          </div>
-        )}
-
         {/* Save button */}
         <button
           onClick={handleSave}
@@ -438,6 +447,25 @@ export default function VitalsLog() {
           No previous entries yet.
           <br />
           Added vitals will appear here in a spreadsheet.
+        </div>
+      )}
+
+      {/* Fluids spreadsheet */}
+      {fluidsLog.length > 0 && (
+        <div style={{ marginTop: '24px' }}>
+          <div
+            style={{
+              fontSize: '17px',
+              fontWeight: '900',
+              color: '#6B7280',
+              marginBottom: '12px',
+              textTransform: 'uppercase',
+              letterSpacing: '0.5px',
+            }}
+          >
+            Fluid Intake Logs
+          </div>
+          <FluidsTable entries={fluidsLog.sort((a, b) => (a.id > b.id ? -1 : 1))} />
         </div>
       )}
     </div>
