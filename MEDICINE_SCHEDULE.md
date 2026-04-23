@@ -9,11 +9,12 @@ This document outlines the daily medication schedule and frequency for the patie
 - **Sacubitril / Valsartan** (Entresto) - 24–26 mg
 - **Clopidogrel** (Plavix) - 75 mg
 - **Furosemide** (Lasix) - 20 mg
-- **Spironolactone** (Aldactone) - 12.5 mg (½ tablet)
 - **Tramadol** (Ultram) - 50 mg
 - **Methocarbamol** (Robaxin) - 750 mg
 - **Metformin** (Glucophage) - 500 mg
 - **Glimepiride** (Amaryl) - 5 mg
+- **Aspirin** (Low Dose EC) - 81 mg
+- **Pravastatin** (Pravachol) - 20 mg
 
 ### 🌤️ Afternoon (02:00 PM)
 - **Tramadol** (Ultram) - 50 mg
@@ -22,6 +23,7 @@ This document outlines the daily medication schedule and frequency for the patie
 ### 🍲 Dinner (06:00 PM)
 - **Sacubitril / Valsartan** (Entresto) - 24–26 mg
 - **Metoprolol Succinate ER** (Toprol XL) - 25 mg
+- **Spironolactone** (Aldactone) - 12.5 mg (½ tablet)
 
 ### 🌆 Evening (08:00 PM)
 - **Tramadol** (Ultram) - 50 mg
@@ -34,8 +36,6 @@ This document outlines the daily medication schedule and frequency for the patie
 ### ⚠️ As Needed (PRN)
 - **Polyethylene Glycol 3350** (Miralax) - 17 g (At bedtime)
 - **Acetaminophen** (Tylenol) - 650 mg (Every 8 hours)
-- **Aspirin** (Low Dose EC) - 81 mg
-- **Pravastatin** (Pravachol) - 20 mg
 
 ---
 
@@ -57,5 +57,5 @@ This document outlines the daily medication schedule and frequency for the patie
 | Atorvastatin | Lipitor | **1** |
 | Polyethylene Glycol 3350 | Miralax | **PRN** |
 | Acetaminophen | Tylenol | **PRN** |
-| Aspirin | Low Dose EC | **PRN** |
-| Pravastatin | Pravachol | **PRN** |
+| Aspirin | Low Dose EC | **1** |
+| Pravastatin | Pravachol | **1** |

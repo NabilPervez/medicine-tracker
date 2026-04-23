@@ -1,0 +1,17 @@
+Generic Name,Trade Name,Dose,Frequency,Next Dose Due,Morning (AM),Evening (PM),Bedtime,As Needed,Max Doses/Day
+Acetaminophen,Tylenol 8 Hour,650 MG,Every 8 hours as needed,AS directed,,,,X,3
+Aspirin,Low Dose Aspirin EC,81 MG,Daily,4/24 AM,X,,,,1
+Atorvastatin,Lipitor,40 MG,At bedtime,4/23 pm,,,X,,1
+Clopidogrel,Plavix,75 MG,Daily,4/24 AM,X,,,,1
+Dapagliflozin,Farxiga,10 MG,Daily,4/24 AM,X,,,,1
+Furosemide,Lasix,20 MG,Daily,4/24 AM,X,,,,1
+Glimepiride,Glimepiride,5 MG,Daily,4/24 AM,X,,,,1
+Metformin,Glucophage,500 MG,Daily,4/24 AM,X,,,,1
+Methocarbamol,Robaxin,750 MG,Every 6 hours as needed,AS directed,,,,X,4
+Metoprolol Succinate ER,Toprol XL,25 MG,Every evening,4/23 pm,,X,,,1
+Polyethylene Glycol 3350,Miralax,17 GRAM,At bedtime as needed,AS directed,,,X,X,1
+Pravastatin,Pravachol,20 MG,Daily,4/24 AM,X,,,,1
+Sacubitril/Valsartan,Entresto 24-26 mg,1 TAB,Twice daily,4/23 pm,X,X,,,2
+Spironolactone,Aldactone,12.5 MG,Daily,4/24 pm,,X,,,1
+Tramadol,traMADol,50 MG,Every 6 hours as needed,AS directed,,,,X,4
+Zolpidem Tartrate,Ambien,10 MG,At bedtime,4/23 pm,,,X,,1
