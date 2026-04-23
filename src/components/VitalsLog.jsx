@@ -4,7 +4,8 @@ import { useLocalStorage, getTodayKey, formatDateDisplay } from '../hooks/useLoc
 const EMPTY_VITALS = {
   weight: '',
   temp: '',
-  bp: '',
+  bpTop: '',
+  bpBottom: '',
   pulse: '',
   resp: '',
   pain: '',
@@ -131,7 +132,8 @@ function VitalsTable({ entries }) {
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Date</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Weight</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Temp</th>
-            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>BP</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>BP Top</th>
+            <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>BP Bot</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Pulse</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Resp</th>
             <th style={{ padding: '12px', borderBottom: '2px solid #E5E7EB', fontWeight: '800' }}>Pain</th>
@@ -148,7 +150,12 @@ function VitalsTable({ entries }) {
                 <td style={{ padding: '12px', fontWeight: '700', color: '#1A3A5C', whiteSpace: 'nowrap' }}>{label}</td>
                 <td style={{ padding: '12px', color: entry.weight ? '#1A3A5C' : '#D1D5DB' }}>{entry.weight || '—'}</td>
                 <td style={{ padding: '12px', color: entry.temp ? '#1A3A5C' : '#D1D5DB' }}>{entry.temp || '—'}</td>
-                <td style={{ padding: '12px', color: entry.bp ? '#1A3A5C' : '#D1D5DB' }}>{entry.bp || '—'}</td>
+                <td style={{ padding: '12px', color: (entry.bpTop || (entry.bp && entry.bp.split('/')[0])) ? '#1A3A5C' : '#D1D5DB' }}>
+                  {entry.bpTop || (entry.bp ? entry.bp.split('/')[0] : '—')}
+                </td>
+                <td style={{ padding: '12px', color: (entry.bpBottom || (entry.bp && entry.bp.split('/')[1])) ? '#1A3A5C' : '#D1D5DB' }}>
+                  {entry.bpBottom || (entry.bp ? entry.bp.split('/')[1] : '—')}
+                </td>
                 <td style={{ padding: '12px', color: entry.pulse ? '#1A3A5C' : '#D1D5DB' }}>{entry.pulse || '—'}</td>
                 <td style={{ padding: '12px', color: entry.resp ? '#1A3A5C' : '#D1D5DB' }}>{entry.resp || '—'}</td>
                 <td style={{ padding: '12px', color: entry.pain ? '#1A3A5C' : '#D1D5DB' }}>{entry.pain || '—'}</td>
@@ -271,14 +278,30 @@ export default function VitalsLog() {
           inputMode="decimal"
           isNumeric
         />
-        <InputField
-          label="Blood Pressure"
-          hint="(systolic/diastolic e.g. 120/80)"
-          value={form.bp}
-          onChange={(v) => updateField('bp', v)}
-          placeholder="120/80"
-          inputMode="numeric"
-        />
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ flex: 1 }}>
+            <InputField
+              label="BP Top"
+              hint="(Systolic)"
+              value={form.bpTop}
+              onChange={(v) => updateField('bpTop', v)}
+              placeholder="120"
+              inputMode="numeric"
+              isNumeric
+            />
+          </div>
+          <div style={{ flex: 1 }}>
+            <InputField
+              label="BP Bot"
+              hint="(Diastolic)"
+              value={form.bpBottom}
+              onChange={(v) => updateField('bpBottom', v)}
+              placeholder="80"
+              inputMode="numeric"
+              isNumeric
+            />
+          </div>
+        </div>
         <InputField
           label="Pulse"
           hint="(beats per min)"
