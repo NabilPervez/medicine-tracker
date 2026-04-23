@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  background-color: #F8F5EF;
+  font-family: 'Nunito', sans-serif;
+  font-size: 18px;
+  /* Prevent double-tap zoom on iOS */
+  touch-action: manipulation;
+}
+
+/* Prevent pull-to-refresh on mobile */
+body {
+  overscroll-behavior-y: contain;
+}
+
+/* Remove default button/input styles */
+button, input {
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: 'Nunito', sans-serif;
+}
+
+/* Make scrollbar thinner on desktop */
+::-webkit-scrollbar {
+  width: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: #D1D5DB;
+  border-radius: 2px;
+}
+
+/* Smooth scrolling */
+* {
+  scroll-behavior: smooth;
+}
