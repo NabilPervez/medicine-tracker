@@ -1,10 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import TodaysMeds from './components/TodaysMeds';
 import VitalsLog from './components/VitalsLog';
+import MedicineLibrary from './components/MedicineLibrary';
 
 const TABS = [
   { id: 'meds', label: "Today's Meds", emoji: '💊' },
   { id: 'vitals', label: 'Vitals & Fluids', emoji: '📊' },
+  { id: 'library', label: 'Library', emoji: '📚' },
 ];
 
 export default function App() {
@@ -101,7 +103,7 @@ export default function App() {
       {/* App header */}
       <header
         style={{
-          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : '#0D7A8A',
+          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : activeTab === 'vitals' ? '#0D7A8A' : '#4B5563',
           color: '#FFFFFF',
           padding: '14px 20px 0',
           display: 'flex',
@@ -143,7 +145,7 @@ export default function App() {
       <nav
         style={{
           display: 'flex',
-          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : '#0D7A8A',
+          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : activeTab === 'vitals' ? '#0D7A8A' : '#4B5563',
           padding: '8px 12px 0',
           gap: '4px',
           transition: 'background-color 0.3s',
@@ -157,11 +159,11 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               style={{
                 flex: 1,
-                padding: '12px 8px',
-                fontSize: '16px',
+                padding: '12px 4px',
+                fontSize: '15px',
                 fontWeight: '800',
                 fontFamily: 'Nunito, sans-serif',
-                color: isActive ? (tab.id === 'meds' ? '#1A3A5C' : '#0D7A8A') : 'rgba(255,255,255,0.7)',
+                color: isActive ? (tab.id === 'meds' ? '#1A3A5C' : tab.id === 'vitals' ? '#0D7A8A' : '#4B5563') : 'rgba(255,255,255,0.7)',
                 backgroundColor: isActive ? '#F8F5EF' : 'transparent',
                 border: 'none',
                 borderRadius: '12px 12px 0 0',
@@ -191,7 +193,9 @@ export default function App() {
           paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
         }}
       >
-        {activeTab === 'meds' ? <TodaysMeds /> : <VitalsLog />}
+        {activeTab === 'meds' && <TodaysMeds />}
+        {activeTab === 'vitals' && <VitalsLog />}
+        {activeTab === 'library' && <MedicineLibrary />}
       </main>
     </div>
   );

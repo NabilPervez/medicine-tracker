@@ -1,160 +1,55 @@
-// Medication schedule — sourced from discharge instructions PDF
-// To update: edit this file and redeploy to Netlify.
+import medicinesData from './medicines.json';
+
+// Helper to quickly build medication entries from the JSON database
+const getMed = (key) => ({ id: key, ...medicinesData[key] });
 
 export const MEDICATIONS = {
   '08:00 AM': [
-    {
-      id: 'asp-81',
-      name: 'Aspirin',
-      brand: 'Low Dose EC',
-      dose: '81 mg · 1 tablet',
-      warning: null,
-      instructions: 'Take with food or a full glass of water. Do NOT crush or chew — it is enteric-coated.',
-    },
-    {
-      id: 'clop-75',
-      name: 'Clopidogrel',
-      brand: 'Plavix',
-      dose: '75 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food.',
-    },
-    {
-      id: 'dapa-10',
-      name: 'Dapagliflozin',
-      brand: 'Farxiga',
-      dose: '10 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food. Usually taken in the morning.',
-    },
-    {
-      id: 'furo-20',
-      name: 'Furosemide',
-      brand: 'Lasix',
-      dose: '20 mg · 1 tablet',
-      warning: null,
-      instructions: 'Take with food or milk. Morning dose prevents nighttime bathroom trips.',
-    },
-    {
-      id: 'glim-5',
-      name: 'Glimepiride',
-      brand: null,
-      dose: '5 mg · 1 tablet',
-      warning: '⚠️ MUST take with breakfast',
-      instructions: 'MUST take with breakfast or your first main meal. Prevents low blood sugar.',
-    },
-    {
-      id: 'metf-500',
-      name: 'Metformin',
-      brand: 'Glucophage',
-      dose: '500 mg · 1 tablet',
-      warning: '⚠️ MUST take with a meal',
-      instructions: 'MUST take with a meal to prevent stomach upset. (First week back — take with food as stomach readjusts.)',
-    },
-    {
-      id: 'prav-20',
-      name: 'Pravastatin',
-      brand: 'Pravachol',
-      dose: '20 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food.',
-    },
-    {
-      id: 'entr-am',
-      name: 'Sacubitril / Valsartan',
-      brand: 'Entresto',
-      dose: '24–26 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food.',
-    },
+    getMed('furosemide'),
+    getMed('spironolactone'),
+    getMed('sacubitril_valsartan'),
+    getMed('pravastatin'),
+    getMed('methocarbamol'),
   ],
-  '08:00 PM': [
-    {
-      id: 'meto-25',
-      name: 'Metoprolol Succinate ER',
-      brand: 'Toprol XL',
-      dose: '25 mg · 1 tablet',
-      warning: '⚠️ Do NOT crush or split',
-      instructions: 'Take with or right after a meal. Do NOT crush, chew, or divide — extended-release tablet.',
-    },
-    {
-      id: 'spiro-12',
-      name: 'Spironolactone',
-      brand: 'Aldactone',
-      dose: '12.5 mg · ½ of a 25 mg tablet',
-      warning: '⚠️ Take HALF a tablet',
-      instructions: 'Take HALF (½) of a 25 mg tablet with food to aid absorption.',
-    },
-    {
-      id: 'entr-pm',
-      name: 'Sacubitril / Valsartan',
-      brand: 'Entresto',
-      dose: '24–26 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food.',
-    },
+  '10:00 AM': [
+    getMed('dapagliflozin'),
+    getMed('metformin'),
+    getMed('glimepiride'),
+  ],
+  '12:00 PM': [
+    getMed('clopidogrel'),
+    getMed('aspirin'),
+  ],
+  '02:00 PM': [
+    getMed('methocarbamol'),
+  ],
+  '06:00 PM': [
+    getMed('metoprolol'),
+    getMed('sacubitril_valsartan'),
+    getMed('spironolactone'),
   ],
   '10:00 PM': [
-    {
-      id: 'ator-40',
-      name: 'Atorvastatin',
-      brand: 'Lipitor',
-      dose: '40 mg · 1 tablet',
-      warning: null,
-      instructions: 'Can be taken with or without food. Taken at night — cholesterol production is highest during sleep.',
-    },
-    {
-      id: 'zolp-10',
-      name: 'Zolpidem Tartrate',
-      brand: 'Ambien',
-      dose: '10 mg · 1 tablet',
-      warning: '⚠️ EMPTY stomach only',
-      instructions: 'Take on an EMPTY stomach right before getting into bed. Heavy food will slow it down significantly. Ensure at least 7–8 hours of sleep.',
-    },
+    getMed('atorvastatin'),
+    getMed('zolpidem'),
+    getMed('methocarbamol'),
   ],
-  prn: [
-    {
-      id: 'acet-650',
-      name: 'Acetaminophen',
-      brand: 'Tylenol',
-      dose: '650 mg',
-      condition: 'Mild or moderate pain',
-      warning: null,
-      instructions: 'Every 8 hours as needed. Can be taken with or without food.',
-    },
-    {
-      id: 'tram-50',
-      name: 'Tramadol',
-      brand: null,
-      dose: '50 mg',
-      condition: 'Moderate or severe pain',
-      warning: null,
-      instructions: 'Every 6 hours as needed. Take with food if it causes nausea.',
-    },
-    {
-      id: 'meth-750',
-      name: 'Methocarbamol',
-      brand: 'Robaxin',
-      dose: '750 mg',
-      condition: 'Muscle spasms',
-      warning: null,
-      instructions: 'Every 6 hours as needed. Can be taken with or without food.',
-    },
-    {
-      id: 'peg-17',
-      name: 'Polyethylene Glycol 3350',
-      brand: 'Miralax',
-      dose: '17 g · 1 packet',
-      condition: 'Constipation',
-      warning: '⚠️ Count liquid toward 1500 mL limit',
-      instructions: 'At bedtime as needed. Dissolve fully in 4–8 oz of water, juice, or coffee. Count this liquid toward your 1500 mL daily limit!',
-    },
+  'prn': [
+    getMed('methocarbamol'),
+    getMed('tramadol'),
+    getMed('peg3350'),
+    getMed('acetaminophen'),
+    getMed('aspirin'),
   ],
 };
 
 export const TIME_BLOCKS = [
-  { key: '08:00 AM', label: '08:00 AM', emoji: '☀️', color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' },
-  { key: '08:00 PM', label: '08:00 PM', emoji: '🌆', color: '#EA580C', bg: '#FFF7ED', border: '#FED7AA' },
-  { key: '10:00 PM', label: '10:00 PM', emoji: '🌙', color: '#4F46E5', bg: '#EEF2FF', border: '#C7D2FE' },
+  { key: '08:00 AM', label: 'Breakfast (08:00 AM)', emoji: '🍳', color: '#D97706', bg: '#FFFBEB', border: '#FDE68A' },
+  { key: '10:00 AM', label: 'Morning (10:00 AM)', emoji: '☀️', color: '#B45309', bg: '#FEF3C7', border: '#FCD34D' },
+  { key: '12:00 PM', label: 'Lunch (12:00 PM)', emoji: '🥪', color: '#047857', bg: '#ECFDF5', border: '#A7F3D0' },
+  { key: '02:00 PM', label: 'Afternoon (02:00 PM)', emoji: '🌤️', color: '#0369A1', bg: '#F0F9FF', border: '#BAE6FD' },
+  { key: '06:00 PM', label: 'Dinner (06:00 PM)', emoji: '🍲', color: '#EA580C', bg: '#FFF7ED', border: '#FED7AA' },
+  { key: '10:00 PM', label: 'Before Bed (10:00 PM)', emoji: '🌙', color: '#4F46E5', bg: '#EEF2FF', border: '#C7D2FE' },
   { key: 'prn',     label: 'As Needed (PRN)', emoji: '⚠️', color: '#DC2626', bg: '#FEF2F2', border: '#FECACA' },
 ];
+
+export const ALL_MEDICINES = Object.values(medicinesData);
