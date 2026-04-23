@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { MEDICATIONS, TIME_BLOCKS } from '../data/medications';
 import { useLocalStorage, getTodayKey, formatDateDisplay } from '../hooks/useLocalStorage';
 
@@ -12,7 +13,6 @@ function MedItem({ med, checked, onToggle, isPrn }) {
         border: '2px solid',
         borderRadius: '16px',
         padding: '16px',
-        marginBottom: '12px',
         transition: 'all 0.2s ease',
       }}
     >
@@ -134,8 +134,23 @@ function TimeBlock({ block, meds, checks, onToggle }) {
   const total = meds.length;
   const allDone = takenCount === total;
 
+  // Sort meds: unchecked first, checked last
+  const sortedMeds = [...meds].sort((a, b) => {
+    const aChecked = !!checks[a.id];
+    const bChecked = !!checks[b.id];
+    if (aChecked === bChecked) return 0;
+    return aChecked ? 1 : -1;
+  });
+
   return (
-    <div style={{ marginBottom: '28px' }}>
+    <motion.div 
+      layout
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      exit={{ opacity: 0, scale: 0.9 }}
+      transition={{ duration: 0.4, type: "spring", bounce: 0.2 }}
+      style={{ marginBottom: '28px' }}
+    >
       {/* Block header */}
       <div
         style={{
@@ -178,16 +193,28 @@ function TimeBlock({ block, meds, checks, onToggle }) {
       </div>
 
       {/* Med list */}
-      {meds.map((med) => (
-        <MedItem
-          key={med.id}
-          med={med}
-          checked={!!checks[med.id]}
-          onToggle={() => onToggle(med.id)}
-          isPrn={block.key === 'prn'}
-        />
-      ))}
-    </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+        <AnimatePresence>
+          {sortedMeds.map((med) => (
+            <motion.div
+              key={med.id}
+              layout
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.3, type: "spring", bounce: 0.2 }}
+            >
+              <MedItem
+                med={med}
+                checked={!!checks[med.id]}
+                onToggle={() => onToggle(med.id)}
+                isPrn={block.key === 'prn'}
+              />
+            </motion.div>
+          ))}
+        </AnimatePresence>
+      </div>
+    </motion.div>
   );
 }
 
@@ -202,6 +229,17 @@ export default function TodaysMeds() {
   const allMeds = Object.values(MEDICATIONS).flat();
   const totalTaken = allMeds.filter((m) => checks[m.id]).length;
   const totalMeds = allMeds.length;
+
+  // Calculate block status and sort
+  const blocksWithStatus = TIME_BLOCKS.map((block) => {
+    const medsInBlock = MEDICATIONS[block.key] || [];
+    const isFinished = medsInBlock.length > 0 && medsInBlock.every(m => checks[m.id]);
+    return { ...block, isFinished };
+  });
+
+  const unfinishedBlocks = blocksWithStatus.filter(b => !b.isFinished);
+  const finishedBlocks = blocksWithStatus.filter(b => b.isFinished);
+  const sortedBlocks = [...unfinishedBlocks, ...finishedBlocks];
 
   function toggleMed(medId) {
     setChecks((prev) => ({ ...prev, [medId]: !prev[medId] }));
@@ -299,15 +337,19 @@ export default function TodaysMeds() {
       </div>
 
       {/* Medication time blocks */}
-      {TIME_BLOCKS.map((block) => (
-        <TimeBlock
-          key={block.key}
-          block={block}
-          meds={MEDICATIONS[block.key]}
-          checks={checks}
-          onToggle={toggleMed}
-        />
-      ))}
+      <div style={{ display: 'flex', flexDirection: 'column' }}>
+        <AnimatePresence>
+          {sortedBlocks.map((block) => (
+            <TimeBlock
+              key={block.key}
+              block={block}
+              meds={MEDICATIONS[block.key]}
+              checks={checks}
+              onToggle={toggleMed}
+            />
+          ))}
+        </AnimatePresence>
+      </div>
 
       {/* All done celebration */}
       {totalTaken === totalMeds && (

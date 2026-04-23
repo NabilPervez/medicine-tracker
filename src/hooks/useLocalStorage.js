@@ -28,7 +28,10 @@ export function useLocalStorage(key, initialValue) {
 }
 
 export function getTodayKey() {
-  const d = new Date();
+  const now = new Date();
+  const chicagoTimeStr = now.toLocaleString("en-US", {timeZone: "America/Chicago"});
+  const d = new Date(chicagoTimeStr);
+  d.setHours(d.getHours() - 12);
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
 }
 
