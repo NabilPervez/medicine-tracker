@@ -70,65 +70,38 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
 
 function PainSelector({ value, onChange }) {
   return (
-    <div style={{ marginBottom: '16px' }}>
+    <div style={{ marginBottom: '24px' }}>
       <label
         style={{
           display: 'block',
           fontSize: '15px',
-          fontWeight: '700',
-          color: '#374151',
-          marginBottom: '8px',
+          fontWeight: '800',
+          color: '#121212',
+          marginBottom: '12px',
           textTransform: 'uppercase',
           letterSpacing: '0.5px',
         }}
       >
         Pain Level
-        <span
-          style={{
-            fontSize: '12px',
-            fontWeight: '600',
-            color: '#9CA3AF',
-            textTransform: 'none',
-            letterSpacing: 0,
-            marginLeft: '6px',
-          }}
-        >
-          (1 = minimal · 10 = severe)
+        <span style={{ fontSize: '12px', fontWeight: '600', color: '#535353', textTransform: 'none', marginLeft: '8px' }}>
+          ({value || '1'} / 10)
         </span>
       </label>
-      <div
+      <input
+        type="range"
+        min="1"
+        max="10"
+        value={value || 1}
+        onChange={(e) => onChange(e.target.value)}
         style={{
-          display: 'grid',
-          gridTemplateColumns: 'repeat(5, 1fr)',
-          gap: '8px',
+          width: '100%',
+          accentColor: '#1ED760',
+          cursor: 'pointer',
         }}
-      >
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
-          const selected = String(value) === String(n);
-          const painColor =
-            n <= 3 ? '#16A34A' : n <= 6 ? '#D97706' : '#DC2626';
-          return (
-            <button
-              key={n}
-              onClick={() => onChange(String(n))}
-              style={{
-                height: '52px',
-                borderRadius: '12px',
-                border: selected ? `3px solid ${painColor}` : '2px solid #E5E7EB',
-                backgroundColor: selected ? painColor : '#FFFFFF',
-                color: selected ? '#FFFFFF' : '#374151',
-                fontSize: '22px',
-                fontWeight: '900',
-                fontFamily: 'Nunito, sans-serif',
-                cursor: 'pointer',
-                transition: 'all 0.15s',
-                WebkitTapHighlightColor: 'transparent',
-              }}
-            >
-              {n}
-            </button>
-          );
-        })}
+      />
+      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: '700', color: '#535353', marginTop: '6px' }}>
+        <span>1 - Minimal</span>
+        <span>10 - Severe</span>
       </div>
     </div>
   );
@@ -206,14 +179,14 @@ export default function VitalsLog() {
       {/* Header */}
       <div
         style={{
-          backgroundColor: '#0D7A8A',
+          backgroundColor: '#121212',
           color: '#FFFFFF',
           padding: '18px 20px 16px',
           borderRadius: '0 0 20px 20px',
           marginBottom: '16px',
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: '600', opacity: 0.8, marginBottom: '2px' }}>
+        <div style={{ fontSize: '14px', fontWeight: '700', opacity: 0.8, marginBottom: '2px', color: '#1ED760' }}>
           VITALS & FLUIDS LOG
         </div>
         <div style={{ fontSize: '20px', fontWeight: '800' }}>
@@ -244,7 +217,8 @@ export default function VitalsLog() {
       <div
         style={{
           backgroundColor: '#FFFFFF',
-          border: '2px solid #0D7A8A',
+          border: 'none',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.05)',
           borderRadius: '18px',
           padding: '20px',
           marginBottom: '24px',
@@ -376,8 +350,8 @@ export default function VitalsLog() {
             fontSize: '20px',
             fontWeight: '900',
             fontFamily: 'Nunito, sans-serif',
-            color: '#FFFFFF',
-            backgroundColor: saved ? '#16A34A' : '#0D7A8A',
+            color: '#121212',
+            backgroundColor: saved ? '#A7F3D0' : '#1ED760',
             border: 'none',
             borderRadius: '14px',
             cursor: 'pointer',

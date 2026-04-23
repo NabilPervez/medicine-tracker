@@ -26,8 +26,8 @@ function MedItem({ med, checked, onToggle, isPrn }) {
             width: '52px',
             height: '52px',
             borderRadius: '12px',
-            border: checked ? '3px solid #16A34A' : '3px solid #D1D5DB',
-            backgroundColor: checked ? '#16A34A' : '#FFFFFF',
+            border: checked ? '3px solid #1ED760' : '3px solid #D1D5DB',
+            backgroundColor: checked ? '#1ED760' : '#FFFFFF',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -214,14 +214,14 @@ export default function TodaysMeds() {
       {/* Date header */}
       <div
         style={{
-          backgroundColor: '#1A3A5C',
+          backgroundColor: '#121212',
           color: '#FFFFFF',
           padding: '18px 20px 16px',
           borderRadius: '0 0 20px 20px',
           marginBottom: '16px',
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: '600', opacity: 0.75, marginBottom: '2px' }}>
+        <div style={{ fontSize: '14px', fontWeight: '700', opacity: 0.8, marginBottom: '2px', color: '#1ED760' }}>
           TODAY
         </div>
         <div style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1.2 }}>
@@ -256,7 +256,7 @@ export default function TodaysMeds() {
               style={{
                 height: '100%',
                 width: `${(totalTaken / totalMeds) * 100}%`,
-                backgroundColor: totalTaken === totalMeds ? '#4ADE80' : '#60A5FA',
+                backgroundColor: totalTaken === totalMeds ? '#1ED760' : '#1DB954',
                 borderRadius: '8px',
                 transition: 'width 0.4s ease',
               }}

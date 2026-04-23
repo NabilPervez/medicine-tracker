@@ -6,14 +6,14 @@ export default function MedicineLibrary() {
     <div style={{ paddingBottom: '8px' }}>
       <div
         style={{
-          backgroundColor: '#4B5563',
+          backgroundColor: '#121212',
           color: '#FFFFFF',
           padding: '18px 20px 16px',
           borderRadius: '0 0 20px 20px',
           marginBottom: '20px',
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: '600', opacity: 0.8, marginBottom: '2px' }}>
+        <div style={{ fontSize: '14px', fontWeight: '700', opacity: 0.8, marginBottom: '2px', color: '#1ED760' }}>
           REFERENCE
         </div>
         <div style={{ fontSize: '20px', fontWeight: '800' }}>

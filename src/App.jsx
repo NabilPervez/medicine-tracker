@@ -92,7 +92,7 @@ export default function App() {
     <div
       style={{
         fontFamily: 'Nunito, sans-serif',
-        backgroundColor: '#F8F5EF',
+        backgroundColor: '#F8F8F8',
         minHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
@@ -103,8 +103,8 @@ export default function App() {
       {/* App header */}
       <header
         style={{
-          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : activeTab === 'vitals' ? '#0D7A8A' : '#4B5563',
-          color: '#FFFFFF',
+          backgroundColor: activeTab === 'meds' ? '#1ED760' : '#121212',
+          color: activeTab === 'meds' ? '#121212' : '#FFFFFF',
           padding: '14px 20px 0',
           display: 'flex',
           alignItems: 'center',
@@ -122,20 +122,20 @@ export default function App() {
         <div style={{ position: 'relative' }}>
           <button 
             onClick={() => setShowSettings(!showSettings)}
-            style={{ background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#FFF' }}
+            style={{ background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: activeTab === 'meds' ? '#121212' : '#FFFFFF' }}
           >
             ⚙️
           </button>
           {showSettings && (
             <div style={{
-              position: 'absolute', right: 0, top: '40px', background: '#FFF', 
-              color: '#333', borderRadius: '12px', padding: '12px', boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+              position: 'absolute', right: 0, top: '40px', background: '#FFFFFF', 
+              color: '#121212', borderRadius: '12px', padding: '12px', boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
               minWidth: '150px', zIndex: 100
             }}>
               <input type="file" accept=".json" ref={fileInputRef} onChange={handleImport} style={{ display: 'none' }} />
-              <button onClick={() => fileInputRef.current.click()} style={{ display: 'block', width: '100%', padding: '10px', background: 'transparent', border: 'none', textAlign: 'left', fontWeight: 'bold', cursor: 'pointer' }}>📥 Import Data</button>
-              <hr style={{ border: 'none', borderTop: '1px solid #EEE', margin: '4px 0' }} />
-              <button onClick={handleExport} style={{ display: 'block', width: '100%', padding: '10px', background: 'transparent', border: 'none', textAlign: 'left', fontWeight: 'bold', cursor: 'pointer' }}>📤 Export Data</button>
+              <button onClick={() => fileInputRef.current.click()} style={{ display: 'block', width: '100%', padding: '10px', background: 'transparent', border: 'none', textAlign: 'left', fontWeight: 'bold', cursor: 'pointer', color: '#121212' }}>📥 Import Data</button>
+              <hr style={{ border: 'none', borderTop: '1px solid #E5E7EB', margin: '4px 0' }} />
+              <button onClick={handleExport} style={{ display: 'block', width: '100%', padding: '10px', background: 'transparent', border: 'none', textAlign: 'left', fontWeight: 'bold', cursor: 'pointer', color: '#121212' }}>📤 Export Data</button>
             </div>
           )}
         </div>
@@ -145,7 +145,7 @@ export default function App() {
       <nav
         style={{
           display: 'flex',
-          backgroundColor: activeTab === 'meds' ? '#1A3A5C' : activeTab === 'vitals' ? '#0D7A8A' : '#4B5563',
+          backgroundColor: activeTab === 'meds' ? '#1ED760' : '#121212',
           padding: '8px 12px 0',
           gap: '4px',
           transition: 'background-color 0.3s',
@@ -163,8 +163,8 @@ export default function App() {
                 fontSize: '15px',
                 fontWeight: '800',
                 fontFamily: 'Nunito, sans-serif',
-                color: isActive ? (tab.id === 'meds' ? '#1A3A5C' : tab.id === 'vitals' ? '#0D7A8A' : '#4B5563') : 'rgba(255,255,255,0.7)',
-                backgroundColor: isActive ? '#F8F5EF' : 'transparent',
+                color: isActive ? '#121212' : (activeTab === 'meds' ? 'rgba(18,18,18,0.7)' : 'rgba(255,255,255,0.7)'),
+                backgroundColor: isActive ? '#F8F8F8' : 'transparent',
                 border: 'none',
                 borderRadius: '12px 12px 0 0',
                 cursor: 'pointer',
