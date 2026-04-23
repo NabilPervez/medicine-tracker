@@ -2,11 +2,13 @@ import { useState, useEffect, useRef } from 'react';
 import TodaysMeds from './components/TodaysMeds';
 import VitalsLog from './components/VitalsLog';
 import MedicineLibrary from './components/MedicineLibrary';
+import CallForHelp from './components/CallForHelp';
 
 const TABS = [
   { id: 'meds', label: "Today's Meds", emoji: '💊' },
   { id: 'vitals', label: 'Vitals & Fluids', emoji: '📊' },
   { id: 'library', label: 'Library', emoji: '📚' },
+  { id: 'help', label: 'Call For Help', emoji: '📞' },
 ];
 
 export default function App() {
@@ -154,6 +156,7 @@ export default function App() {
         {activeTab === 'meds' && <TodaysMeds />}
         {activeTab === 'vitals' && <VitalsLog />}
         {activeTab === 'library' && <MedicineLibrary />}
+        {activeTab === 'help' && <CallForHelp />}
       </main>
 
       {/* Bottom Tab navigation */}
