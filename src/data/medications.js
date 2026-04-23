@@ -12,13 +12,14 @@ export const MEDICATIONS = {
     getMed('spironolactone',      '0800am'),
     getMed('tramadol',            '0800am'),
     getMed('methocarbamol',       '0800am'),
+    getMed('metformin',           '0800am'),
+    getMed('glimepiride',         '0800am'),
   ],
   '02:00 PM': [
     getMed('tramadol',      '0200pm'),
     getMed('methocarbamol', '0200pm'),
   ],
   '06:00 PM': [
-    getMed('dapagliflozin',        '0600pm'),
     getMed('sacubitril_valsartan', '0600pm'),
     getMed('metoprolol',           '0600pm'),
   ],
@@ -34,8 +35,6 @@ export const MEDICATIONS = {
     getMed('peg3350',      'prn'),
     getMed('acetaminophen','prn'),
     getMed('aspirin',      'prn'),
-    getMed('metformin',    'prn'),
-    getMed('glimepiride',  'prn'),
     getMed('pravastatin',  'prn'),
   ],
 };
