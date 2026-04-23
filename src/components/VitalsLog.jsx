@@ -62,7 +62,7 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint, isNu
           boxSizing: 'border-box',
           transition: 'border-color 0.15s',
         }}
-        onFocus={(e) => (e.target.style.borderColor = '#1ED760')}
+        onFocus={(e) => (e.target.style.borderColor = '#526442')}
         onBlur={(e) => (e.target.style.borderColor = '#D1D5DB')}
       />
     </div>
@@ -91,7 +91,7 @@ function PainSelector({ value, onChange }) {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
         {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
           const selected = String(value) === String(n);
-          const painColor = n <= 3 ? '#1ED760' : n <= 6 ? '#D97706' : '#DC2626';
+          const painColor = n <= 3 ? '#526442' : n <= 6 ? '#D97706' : '#DC2626';
           return (
             <button
               key={n}
@@ -192,17 +192,19 @@ export default function VitalsLog() {
       {/* Header */}
       <div
         style={{
-          backgroundColor: '#121212',
-          color: '#FFFFFF',
-          padding: '18px 20px 16px',
-          borderRadius: '0 0 20px 20px',
-          marginBottom: '16px',
+          backgroundColor: '#FFFFFF',
+          color: '#121212',
+          padding: '24px 20px',
+          borderRadius: '16px',
+          marginBottom: '20px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+          border: '1px solid #E5E7EB',
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: '700', opacity: 0.8, marginBottom: '2px', color: '#1ED760' }}>
+        <div style={{ fontSize: '13px', fontWeight: '700', opacity: 0.8, marginBottom: '4px', color: '#526442', textTransform: 'uppercase', letterSpacing: '1px' }}>
           VITALS & FLUIDS LOG
         </div>
-        <div style={{ fontSize: '20px', fontWeight: '800' }}>
+        <div style={{ fontSize: '24px', fontWeight: '800', fontFamily: 'Plus Jakarta Sans, sans-serif' }}>
           {formatDateDisplay(today)}
         </div>
       </div>
@@ -241,7 +243,7 @@ export default function VitalsLog() {
           style={{
             fontSize: '18px',
             fontWeight: '900',
-            color: '#0D7A8A',
+            color: '#526442',
             marginBottom: '18px',
             display: 'flex',
             alignItems: 'center',
@@ -351,7 +353,7 @@ export default function VitalsLog() {
                       ? '#DC2626'
                       : Number(form.fluids) > 1200
                       ? '#D97706'
-                      : '#1DB954',
+                      : '#526442',
                   borderRadius: '8px',
                   transition: 'width 0.3s ease',
                 }}
@@ -369,8 +371,8 @@ export default function VitalsLog() {
             fontSize: '20px',
             fontWeight: '900',
             fontFamily: 'Nunito, sans-serif',
-            color: '#121212',
-            backgroundColor: saved ? '#A7F3D0' : '#1ED760',
+            color: saved ? '#111827' : '#FFFFFF',
+            backgroundColor: saved ? '#A7F3D0' : '#526442',
             border: 'none',
             borderRadius: '14px',
             cursor: 'pointer',

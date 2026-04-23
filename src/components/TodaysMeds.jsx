@@ -26,8 +26,8 @@ function MedItem({ med, checked, onToggle, isPrn }) {
             width: '52px',
             height: '52px',
             borderRadius: '12px',
-            border: checked ? '3px solid #1ED760' : '3px solid #D1D5DB',
-            backgroundColor: checked ? '#1ED760' : '#FFFFFF',
+            border: checked ? '3px solid #526442' : '3px solid #E5E7EB',
+            backgroundColor: checked ? '#526442' : '#FFFFFF',
             cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
@@ -252,17 +252,19 @@ export default function TodaysMeds() {
       {/* Date header */}
       <div
         style={{
-          backgroundColor: '#121212',
-          color: '#FFFFFF',
-          padding: '18px 20px 16px',
-          borderRadius: '0 0 20px 20px',
-          marginBottom: '16px',
+          backgroundColor: '#FFFFFF',
+          color: '#121212',
+          padding: '24px 20px',
+          borderRadius: '16px',
+          marginBottom: '20px',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.02)',
+          border: '1px solid #E5E7EB',
         }}
       >
-        <div style={{ fontSize: '14px', fontWeight: '700', opacity: 0.8, marginBottom: '2px', color: '#1ED760' }}>
+        <div style={{ fontSize: '13px', fontWeight: '700', opacity: 0.8, marginBottom: '4px', color: '#526442', textTransform: 'uppercase', letterSpacing: '1px' }}>
           TODAY
         </div>
-        <div style={{ fontSize: '20px', fontWeight: '800', lineHeight: 1.2 }}>
+        <div style={{ fontSize: '24px', fontWeight: '800', lineHeight: 1.2, fontFamily: 'Plus Jakarta Sans, sans-serif', color: '#111827' }}>
           {formatDateDisplay(today)}
         </div>
         {/* Progress bar */}
@@ -294,7 +296,7 @@ export default function TodaysMeds() {
               style={{
                 height: '100%',
                 width: `${(totalTaken / totalMeds) * 100}%`,
-                backgroundColor: totalTaken === totalMeds ? '#1ED760' : '#1DB954',
+                backgroundColor: totalTaken === totalMeds ? '#526442' : '#738C5B',
                 borderRadius: '8px',
                 transition: 'width 0.4s ease',
               }}

@@ -91,40 +91,40 @@ export default function App() {
   return (
     <div
       style={{
-        fontFamily: 'Nunito, sans-serif',
-        backgroundColor: '#F8F8F8',
+        fontFamily: 'Inter, sans-serif',
+        backgroundColor: '#F9F9F9',
         minHeight: '100dvh',
         display: 'flex',
         flexDirection: 'column',
         maxWidth: '600px',
         margin: '0 auto',
+        position: 'relative',
       }}
     >
       {/* App header */}
       <header
         style={{
-          backgroundColor: activeTab === 'meds' ? '#1ED760' : '#121212',
-          color: activeTab === 'meds' ? '#121212' : '#FFFFFF',
-          padding: '14px 20px 0',
+          backgroundColor: '#526442',
+          color: '#FFFFFF',
+          padding: '16px 20px 12px',
           display: 'flex',
           alignItems: 'center',
-          gap: '10px',
-          transition: 'background-color 0.3s',
-          paddingTop: 'max(14px, env(safe-area-inset-top))',
+          gap: '12px',
+          paddingTop: 'max(16px, env(safe-area-inset-top))',
         }}
       >
-        <span style={{ fontSize: '26px' }}>🏥</span>
+        <span style={{ fontSize: '24px' }}>🌿</span>
         <div style={{ flex: 1 }}>
-          <div style={{ fontSize: '22px', fontWeight: '900', lineHeight: 1.1 }}>
-            Med Tracker
+          <div style={{ fontSize: '22px', fontWeight: '700', fontFamily: 'Plus Jakarta Sans, sans-serif', letterSpacing: '-0.5px' }}>
+            Medicine Recall
           </div>
         </div>
         <div style={{ position: 'relative' }}>
           <button 
             onClick={() => setShowSettings(!showSettings)}
-            style={{ background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: activeTab === 'meds' ? '#121212' : '#FFFFFF' }}
+            style={{ background: 'transparent', border: 'none', fontSize: '24px', cursor: 'pointer', color: '#FFFFFF', display: 'flex', alignItems: 'center' }}
           >
-            ⚙️
+            <span className="material-symbols-outlined">settings</span>
           </button>
           {showSettings && (
             <div style={{
@@ -141,14 +141,37 @@ export default function App() {
         </div>
       </header>
 
-      {/* Tab navigation */}
+      {/* Main content */}
+      <main
+        style={{
+          flex: 1,
+          overflowY: 'auto',
+          padding: '16px 16px 20px',
+          backgroundColor: '#F9F9F9',
+          paddingBottom: 'calc(90px + env(safe-area-inset-bottom))', // Space for bottom nav
+        }}
+      >
+        {activeTab === 'meds' && <TodaysMeds />}
+        {activeTab === 'vitals' && <VitalsLog />}
+        {activeTab === 'library' && <MedicineLibrary />}
+      </main>
+
+      {/* Bottom Tab navigation */}
       <nav
         style={{
+          position: 'fixed',
+          bottom: 0,
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: '600px',
           display: 'flex',
-          backgroundColor: activeTab === 'meds' ? '#1ED760' : '#121212',
-          padding: '8px 12px 0',
-          gap: '4px',
-          transition: 'background-color 0.3s',
+          backgroundColor: '#FFFFFF',
+          padding: '8px 12px',
+          paddingBottom: 'max(8px, env(safe-area-inset-bottom))',
+          boxShadow: '0 -4px 16px rgba(0,0,0,0.05)',
+          borderTop: '1px solid #E5E7EB',
+          zIndex: 50,
         }}
       >
         {TABS.map((tab) => {
@@ -159,40 +182,31 @@ export default function App() {
               onClick={() => setActiveTab(tab.id)}
               style={{
                 flex: 1,
-                padding: '12px 4px',
-                fontSize: '15px',
-                fontWeight: '800',
-                fontFamily: 'Nunito, sans-serif',
-                color: isActive ? '#121212' : (activeTab === 'meds' ? 'rgba(18,18,18,0.7)' : 'rgba(255,255,255,0.7)'),
-                backgroundColor: isActive ? '#F8F8F8' : 'transparent',
+                padding: '6px 4px',
+                fontSize: '12px',
+                fontWeight: '600',
+                fontFamily: 'Inter, sans-serif',
+                color: isActive ? '#526442' : '#9CA3AF',
+                backgroundColor: 'transparent',
                 border: 'none',
-                borderRadius: '12px 12px 0 0',
+                borderRadius: '8px',
                 cursor: 'pointer',
                 display: 'flex',
+                flexDirection: 'column',
                 alignItems: 'center',
                 justifyContent: 'center',
-                gap: '6px',
-                transition: 'all 0.15s',
-                WebkitTapHighlightColor: 'transparent',
+                gap: '4px',
+                transition: 'all 0.2s ease',
               }}
             >
-              <span style={{ fontSize: '20px' }}>{tab.emoji}</span>
+              <span style={{ fontSize: '24px', opacity: isActive ? 1 : 0.6, transform: isActive ? 'scale(1.1)' : 'scale(1)' }}>
+                {tab.emoji}
+              </span>
               <span>{tab.label}</span>
             </button>
           );
         })}
       </nav>
-
-      {/* Main content */}
-      <main
-        style={{
-          flex: 1,
-          overflowY: 'auto',
-          padding: '0 16px 20px',
-          backgroundColor: '#F8F5EF',
-          paddingBottom: 'max(20px, env(safe-area-inset-bottom))',
-        }}
-      >
         {activeTab === 'meds' && <TodaysMeds />}
         {activeTab === 'vitals' && <VitalsLog />}
         {activeTab === 'library' && <MedicineLibrary />}
