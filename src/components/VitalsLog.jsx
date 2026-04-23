@@ -11,7 +11,7 @@ const EMPTY_VITALS = {
   fluids: '',
 };
 
-function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
+function InputField({ label, value, onChange, placeholder, inputMode, hint, isNumeric }) {
   return (
     <div style={{ marginBottom: '16px' }}>
       <label
@@ -42,8 +42,9 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
         )}
       </label>
       <input
-        type="text"
+        type={isNumeric ? 'number' : 'text'}
         inputMode={inputMode || 'text'}
+        pattern={isNumeric ? '[0-9]*' : undefined}
         value={value}
         onChange={(e) => onChange(e.target.value)}
         placeholder={placeholder}
@@ -53,7 +54,7 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
           fontSize: '22px',
           fontWeight: '700',
           fontFamily: 'Nunito, sans-serif',
-          color: '#1A3A5C',
+          color: '#121212',
           backgroundColor: '#FFFFFF',
           border: '2px solid #D1D5DB',
           borderRadius: '12px',
@@ -61,7 +62,7 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
           boxSizing: 'border-box',
           transition: 'border-color 0.15s',
         }}
-        onFocus={(e) => (e.target.style.borderColor = '#0D7A8A')}
+        onFocus={(e) => (e.target.style.borderColor = '#1ED760')}
         onBlur={(e) => (e.target.style.borderColor = '#D1D5DB')}
       />
     </div>
@@ -70,38 +71,50 @@ function InputField({ label, value, onChange, placeholder, inputMode, hint }) {
 
 function PainSelector({ value, onChange }) {
   return (
-    <div style={{ marginBottom: '24px' }}>
+    <div style={{ marginBottom: '20px' }}>
       <label
         style={{
           display: 'block',
           fontSize: '15px',
-          fontWeight: '800',
-          color: '#121212',
-          marginBottom: '12px',
+          fontWeight: '700',
+          color: '#374151',
+          marginBottom: '10px',
           textTransform: 'uppercase',
           letterSpacing: '0.5px',
         }}
       >
         Pain Level
-        <span style={{ fontSize: '12px', fontWeight: '600', color: '#535353', textTransform: 'none', marginLeft: '8px' }}>
-          ({value || '1'} / 10)
+        <span style={{ fontSize: '12px', fontWeight: '600', color: '#9CA3AF', textTransform: 'none', marginLeft: '6px' }}>
+          (1 = minimal · 10 = severe)
         </span>
       </label>
-      <input
-        type="range"
-        min="1"
-        max="10"
-        value={value || 1}
-        onChange={(e) => onChange(e.target.value)}
-        style={{
-          width: '100%',
-          accentColor: '#1ED760',
-          cursor: 'pointer',
-        }}
-      />
-      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '13px', fontWeight: '700', color: '#535353', marginTop: '6px' }}>
-        <span>1 - Minimal</span>
-        <span>10 - Severe</span>
+      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(5, 1fr)', gap: '8px' }}>
+        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => {
+          const selected = String(value) === String(n);
+          const painColor = n <= 3 ? '#1ED760' : n <= 6 ? '#D97706' : '#DC2626';
+          return (
+            <button
+              key={n}
+              type="button"
+              onClick={() => onChange(String(n))}
+              style={{
+                height: '52px',
+                borderRadius: '12px',
+                border: selected ? `3px solid ${painColor}` : '2px solid #E5E7EB',
+                backgroundColor: selected ? painColor : '#FFFFFF',
+                color: selected ? (n <= 3 ? '#000' : '#FFF') : '#374151',
+                fontSize: '22px',
+                fontWeight: '900',
+                fontFamily: 'Nunito, sans-serif',
+                cursor: 'pointer',
+                transition: 'all 0.15s',
+                WebkitTapHighlightColor: 'transparent',
+              }}
+            >
+              {n}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
@@ -153,23 +166,23 @@ export default function VitalsLog() {
   const today = getTodayKey();
   const [vitalsLog, setVitalsLog] = useLocalStorage('vitals_log', []);
   const [saved, setSaved] = useState(false);
-
-  const todayEntry = vitalsLog.find((e) => e.date === today) || { date: today, ...EMPTY_VITALS };
-  const pastEntries = vitalsLog
-    .filter((e) => e.date !== today)
-    .sort((a, b) => (a.date > b.date ? -1 : 1));
+  // Form state is decoupled from stored state — always starts empty so fields clear after save
+  const [form, setForm] = useState({ ...EMPTY_VITALS });
 
   function updateField(field, value) {
-    setSaved(false);
-    const updated = { ...todayEntry, [field]: value };
+    setForm((prev) => ({ ...prev, [field]: value }));
+  }
+
+  function handleSave() {
+    // Merge form into today's stored entry
+    const existing = vitalsLog.find((e) => e.date === today) || { date: today, ...EMPTY_VITALS };
+    const updated = { ...existing, ...form, date: today };
     setVitalsLog((prev) => {
       const others = prev.filter((e) => e.date !== today);
       return [updated, ...others];
     });
-  }
-
-  function handleSave() {
     setSaved(true);
+    setForm({ ...EMPTY_VITALS }); // Clear form fields after save
     if (navigator.vibrate) navigator.vibrate([30, 20, 30]);
     setTimeout(() => setSaved(false), 2500);
   }
@@ -241,55 +254,61 @@ export default function VitalsLog() {
         <InputField
           label="Weight"
           hint="(lbs)"
-          value={todayEntry.weight}
+          value={form.weight}
           onChange={(v) => updateField('weight', v)}
           placeholder="e.g. 165"
           inputMode="decimal"
+          isNumeric
         />
         <InputField
           label="Temperature"
           hint="(°F)"
-          value={todayEntry.temp}
+          value={form.temp}
           onChange={(v) => updateField('temp', v)}
           placeholder="e.g. 98.6"
           inputMode="decimal"
+          isNumeric
         />
         <InputField
           label="Blood Pressure"
-          hint="(systolic/diastolic)"
-          value={todayEntry.bp}
+          hint="(systolic/diastolic e.g. 120/80)"
+          value={form.bp}
           onChange={(v) => updateField('bp', v)}
-          placeholder="e.g. 120/80"
+          placeholder="120/80"
+          inputMode="numeric"
         />
         <InputField
           label="Pulse"
           hint="(beats per min)"
-          value={todayEntry.pulse}
+          value={form.pulse}
           onChange={(v) => updateField('pulse', v)}
           placeholder="e.g. 72"
           inputMode="numeric"
+          isNumeric
         />
         <InputField
           label="Respiration"
           hint="(breaths per min)"
-          value={todayEntry.resp}
+          value={form.resp}
           onChange={(v) => updateField('resp', v)}
           placeholder="e.g. 16"
           inputMode="numeric"
+          isNumeric
         />
 
-        <PainSelector value={todayEntry.pain} onChange={(v) => updateField('pain', v)} />
+        <PainSelector value={form.pain} onChange={(v) => updateField('pain', v)} />
 
         {/* Fluids with 1500mL progress */}
         <InputField
           label="Fluid Intake"
           hint="(mL — daily limit: 1,500)"
-          value={todayEntry.fluids}
+          value={form.fluids}
           onChange={(v) => updateField('fluids', v)}
           placeholder="e.g. 800"
           inputMode="numeric"
+          isNumeric
         />
-        {todayEntry.fluids && Number(todayEntry.fluids) > 0 && (
+        {form.fluids && Number(form.fluids) > 0 && (
           <div style={{ marginTop: '-10px', marginBottom: '16px' }}>
             <div
               style={{
@@ -307,12 +326,12 @@ export default function VitalsLog() {
               }}
             >
               <span>
-                {Number(todayEntry.fluids) > 1500
+                {Number(form.fluids) > 1500
                   ? '⚠️ OVER LIMIT'
-                  : `${1500 - Number(todayEntry.fluids)} mL remaining`}
+                  : `${1500 - Number(form.fluids)} mL remaining`}
               </span>
               <span>
-                {Math.round((Number(todayEntry.fluids) / 1500) * 100)}% of limit
+                {Math.round((Number(form.fluids) / 1500) * 100)}% of limit
               </span>
             </div>
             <div
@@ -326,13 +345,13 @@ export default function VitalsLog() {
               <div
                 style={{
                   height: '100%',
-                  width: `${Math.min((Number(todayEntry.fluids) / 1500) * 100, 100)}%`,
+                  width: `${Math.min((Number(form.fluids) / 1500) * 100, 100)}%`,
                   backgroundColor:
-                    Number(todayEntry.fluids) > 1500
+                    Number(form.fluids) > 1500
                       ? '#DC2626'
-                      : Number(todayEntry.fluids) > 1200
+                      : Number(form.fluids) > 1200
                       ? '#D97706'
-                      : '#0D7A8A',
+                      : '#1DB954',
                   borderRadius: '8px',
                   transition: 'width 0.3s ease',
                 }}
